@@ -88,7 +88,7 @@ public class setLevelCommand implements CommandHandler {
 	public void allLevel(Player sender, Player targetPlayer, List<String> args) {
 		int scene = targetPlayer.getSceneId();
 
-		List<Avatar> avatars = DatabaseHelper.getAvatars(getPlayer(sender, targetPlayer));
+		List<Avatar> avatars = DatabaseHelper.getAvatars(sender);
 		for (Avatar avatar : avatars) {
 			int avatarId = avatar.getAvatarId();
 			avatar = sender.getAvatars().getAvatarById(avatarId);
@@ -125,13 +125,5 @@ public class setLevelCommand implements CommandHandler {
 	} catch (Exception e) {
 		CommandHandler.sendMessage(targetPlayer, "Failed to reload! Relog to apply changes.");
 	}
-	}
-
-	// Wonky way to get player because I couldn't get an easier way to work
-	private Player getPlayer(Player sender, Player targetPlayer) {
-		Avatar avatar = sender.getAvatars()
-				.getAvatarById(targetPlayer.getTeamManager().getCurrentAvatarEntity().getAvatar().getAvatarId());
-		Player player = avatar.getPlayer();
-		return player;
 	}
 }
