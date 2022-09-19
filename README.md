@@ -24,7 +24,7 @@ Place setLevel.jar into your `\grasscutter\plugins` folder and restart the serve
 
 -Sets the level of all owned characters
 
-**~You must relog after using `/level all` for it to apply~**
+**You must relog after using `/level all` for it to apply**
 
 ## Version
 
