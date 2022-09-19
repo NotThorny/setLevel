@@ -49,31 +49,8 @@ public class setLevelCommand implements CommandHandler {
 	else{
 		this.sendUsageMessage(sender);
 	}
-		
-	}
-	public void allLevel(Player sender, Player targetPlayer, List<String> args) {
-		int scene = targetPlayer.getSceneId();
-
-		List<Avatar> avatars = DatabaseHelper.getAvatars(getPlayer(sender, targetPlayer));
-		for (Avatar avatar : avatars) {
-			int avatarId = avatar.getAvatarId();
-			avatar = sender.getAvatars().getAvatarById(avatarId);
-			int level = Integer.parseInt(args.get(1));
-			int promoteLevel = Avatar.getMinPromoteLevel(level);
-			avatar.setPromoteLevel(promoteLevel);
-			avatar.setLevel(level);
-			avatar.recalcStats();
-			avatar.save();
-		}
-		reloadLevel(targetPlayer, scene, args);
 	}
 
-	// Wonky way to get player because I couldn't get an easier way to work
-	private Player getPlayer(Player sender, Player targetPlayer) {
-		Avatar avatar = sender.getAvatars().getAvatarById(targetPlayer.getTeamManager().getCurrentAvatarEntity().getAvatar().getAvatarId());
-		Player player = avatar.getPlayer();
-		return player;
-	}
 	public void teamLevel(Player sender, Player targetPlayer, List<String> args) {
 		int scene = targetPlayer.getSceneId();
 
@@ -108,6 +85,23 @@ public class setLevelCommand implements CommandHandler {
 		reloadLevel(targetPlayer, scene, args);
 	}
 
+	public void allLevel(Player sender, Player targetPlayer, List<String> args) {
+		int scene = targetPlayer.getSceneId();
+
+		List<Avatar> avatars = DatabaseHelper.getAvatars(getPlayer(sender, targetPlayer));
+		for (Avatar avatar : avatars) {
+			int avatarId = avatar.getAvatarId();
+			avatar = sender.getAvatars().getAvatarById(avatarId);
+			int level = Integer.parseInt(args.get(1));
+			int promoteLevel = Avatar.getMinPromoteLevel(level);
+			avatar.setPromoteLevel(promoteLevel);
+			avatar.setLevel(level);
+			avatar.recalcStats();
+			avatar.save();
+		}
+		reloadLevel(targetPlayer, scene, args);
+	}
+
 	public void reloadLevel(Player targetPlayer, int scene, List<String> args) {
 	try {
 		Position targetPlayerPos = targetPlayer.getPosition();
@@ -121,14 +115,23 @@ public class setLevelCommand implements CommandHandler {
 					"\n*YOU MUST RELOG FOR ALL CHARACTER LEVELS TO APPLY*");
                 break;
             case "team":
-				CommandHandler.sendMessage(targetPlayer, "Changed team levels!");
+				CommandHandler.sendMessage(targetPlayer, "Changed team levels!"+
+				"\n*YOU MUST RELOG FOR PROMOTE LEVELS (MAX) TO APPLY*");
                 break;
             default:
-				CommandHandler.sendMessage(targetPlayer, "Changed level!");
-                
+				CommandHandler.sendMessage(targetPlayer, "Changed level!"+
+				"\n*YOU MUST RELOG FOR PROMOTE LEVEL (MAX) TO APPLY*");
 		}//switch
 	} catch (Exception e) {
 		CommandHandler.sendMessage(targetPlayer, "Failed to reload! Relog to apply changes.");
 	}
+	}
+
+	// Wonky way to get player because I couldn't get an easier way to work
+	private Player getPlayer(Player sender, Player targetPlayer) {
+		Avatar avatar = sender.getAvatars()
+				.getAvatarById(targetPlayer.getTeamManager().getCurrentAvatarEntity().getAvatar().getAvatarId());
+		Player player = avatar.getPlayer();
+		return player;
 	}
 }

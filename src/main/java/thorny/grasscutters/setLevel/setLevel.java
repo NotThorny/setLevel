@@ -1,7 +1,6 @@
 package thorny.grasscutters.setLevel;
 
 import emu.grasscutter.plugin.Plugin;
-//import thorny.grasscutters.MobWave.commands.MobWaveCommand;
 
 public final class setLevel extends Plugin {
     private static setLevel instance;
@@ -19,9 +18,6 @@ public final class setLevel extends Plugin {
 
         // Log a plugin status message.
         this.getLogger().info("The setLevel plugin has been enabled.");
-
-        // Read file to memory
-        //MobWaveCommand.readFile();
     }
 
     @Override public void onDisable() {

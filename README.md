@@ -32,4 +32,5 @@ This uses the Grasscutters plugin template for 1.3.1.
 
 ## Issues
 
-None yet.
+Promote level (max level within ascension) does not apply until relog.
+I had it working and then it broke at some point and no amount of hours reverted fixed it, so now relog is required instead.
