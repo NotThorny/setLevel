@@ -40,39 +40,39 @@ public class setLevelCommand implements CommandHandler {
                 break;
             default:
                 try {
-                    setLevels(sender, targetPlayer, args);
+                    activeLevel(sender, targetPlayer, args);
                 } catch (NumberFormatException e) {
                     this.sendUsageMessage(sender);
                     throw e;
                 }
 		}//switch
-	}
+	}// if
 	else{
 		this.sendUsageMessage(sender);
-	}
-	}
+	}// else
+	}// execute
 
 	public void teamLevel(Player sender, Player targetPlayer, List<String> args) {
 		int scene = targetPlayer.getSceneId();
 
 		targetPlayer.getTeamManager().getActiveTeam().forEach(entity -> {
-			int avatarId = entity.getAvatar().getAvatarId();
-			Avatar avatar = sender.getAvatars().getAvatarById(avatarId);
+			Avatar avatar = sender.getAvatars().getAvatarById(entity.getAvatar().getAvatarId());
 			int level = Integer.parseInt(args.get(1));
+			if (level < 1) level = 1;
+			if (level > 90) level = 90;
 			avatar.setPromoteLevel(Avatar.getMinPromoteLevel(level));
 			avatar.setLevel(level);
 			avatar.recalcStats();
 			avatar.save();
-			sender.sendPacket(new PacketAvatarAddNotify(avatar,false));
-        });
+			sender.sendPacket(new PacketAvatarAddNotify(avatar, false));
+		});
 
 		reloadLevel(targetPlayer, scene, args);
 	}
 	
-
-	private void setLevels(Player sender, Player targetPlayer, List<String> args) {
-		int pId = targetPlayer.getTeamManager().getCurrentAvatarEntity().getAvatar().getAvatarId();
-		Avatar avatar = sender.getAvatars().getAvatarById(pId);
+	private void activeLevel(Player sender, Player targetPlayer, List<String> args) {
+		Avatar avatar = sender.getAvatars().getAvatarById(
+			targetPlayer.getTeamManager().getCurrentAvatarEntity().getAvatar().getAvatarId());
 		int scene = targetPlayer.getSceneId();
 		int level = Integer.parseInt(args.get(0));
 		if (level < 1) level = 1;
@@ -91,9 +91,10 @@ public class setLevelCommand implements CommandHandler {
 
 		List<Avatar> avatars = DatabaseHelper.getAvatars(sender);
 		for (Avatar avatar : avatars) {
-			int avatarId = avatar.getAvatarId();
-			avatar = sender.getAvatars().getAvatarById(avatarId);
+			avatar = sender.getAvatars().getAvatarById(avatar.getAvatarId());
 			int level = Integer.parseInt(args.get(1));
+			if (level < 1) level = 1;
+        	if (level > 90) level = 90;
 			avatar.setPromoteLevel(Avatar.getMinPromoteLevel(level));
 			avatar.setLevel(level);
 			avatar.recalcStats();
@@ -122,6 +123,6 @@ public class setLevelCommand implements CommandHandler {
 		}//switch
 	} catch (Exception e) {
 		CommandHandler.sendMessage(targetPlayer, "Failed to reload! Relog to apply changes.");
-	}
-	}
-}
+	}// catch
+	}// reloadLevel
+}// setLevelCommand
