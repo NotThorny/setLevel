@@ -7,6 +7,7 @@ import emu.grasscutter.command.CommandHandler;
 import emu.grasscutter.database.DatabaseHelper;
 import emu.grasscutter.game.avatar.Avatar;
 import emu.grasscutter.game.player.Player;
+import emu.grasscutter.server.packet.send.PacketAvatarAddNotify;
 import emu.grasscutter.server.packet.send.PacketSceneEntityAppearNotify;
 import emu.grasscutter.utils.Position;
 
@@ -58,11 +59,11 @@ public class setLevelCommand implements CommandHandler {
 			int avatarId = entity.getAvatar().getAvatarId();
 			Avatar avatar = sender.getAvatars().getAvatarById(avatarId);
 			int level = Integer.parseInt(args.get(1));
-			int promoteLevel = Avatar.getMinPromoteLevel(level);
-			avatar.setPromoteLevel(promoteLevel);
+			avatar.setPromoteLevel(Avatar.getMinPromoteLevel(level));
 			avatar.setLevel(level);
 			avatar.recalcStats();
 			avatar.save();
+			sender.sendPacket(new PacketAvatarAddNotify(avatar,false));
         });
 
 		reloadLevel(targetPlayer, scene, args);
@@ -76,11 +77,11 @@ public class setLevelCommand implements CommandHandler {
 		int level = Integer.parseInt(args.get(0));
 		if (level < 1) level = 1;
         if (level > 90) level = 90;
-		int promoteLevel = Avatar.getMinPromoteLevel(level);
-		avatar.setPromoteLevel(promoteLevel);
+		avatar.setPromoteLevel(Avatar.getMinPromoteLevel(level));
 		avatar.setLevel(level);
 		avatar.recalcStats();
 		avatar.save();
+		sender.sendPacket(new PacketAvatarAddNotify(avatar,false));
 		
 		reloadLevel(targetPlayer, scene, args);
 	}
@@ -93,11 +94,11 @@ public class setLevelCommand implements CommandHandler {
 			int avatarId = avatar.getAvatarId();
 			avatar = sender.getAvatars().getAvatarById(avatarId);
 			int level = Integer.parseInt(args.get(1));
-			int promoteLevel = Avatar.getMinPromoteLevel(level);
-			avatar.setPromoteLevel(promoteLevel);
+			avatar.setPromoteLevel(Avatar.getMinPromoteLevel(level));
 			avatar.setLevel(level);
 			avatar.recalcStats();
 			avatar.save();
+			sender.sendPacket(new PacketAvatarAddNotify(avatar,false));
 		}
 		reloadLevel(targetPlayer, scene, args);
 	}
@@ -111,16 +112,13 @@ public class setLevelCommand implements CommandHandler {
 
 		switch (args.get(0)) {
 			case "all":
-				CommandHandler.sendMessage(targetPlayer, "Changed all character levels!"+
-					"\n*YOU MUST RELOG FOR ALL CHARACTER LEVELS TO APPLY*");
+				CommandHandler.sendMessage(targetPlayer, "Changed all character levels!");
                 break;
             case "team":
-				CommandHandler.sendMessage(targetPlayer, "Changed team levels!"+
-				"\n*YOU MUST RELOG FOR PROMOTE LEVELS (MAX) TO APPLY*");
+				CommandHandler.sendMessage(targetPlayer, "Changed team levels!");
                 break;
             default:
-				CommandHandler.sendMessage(targetPlayer, "Changed level!"+
-				"\n*YOU MUST RELOG FOR PROMOTE LEVEL (MAX) TO APPLY*");
+				CommandHandler.sendMessage(targetPlayer, "Changed level!");
 		}//switch
 	} catch (Exception e) {
 		CommandHandler.sendMessage(targetPlayer, "Failed to reload! Relog to apply changes.");

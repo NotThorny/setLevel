@@ -24,13 +24,10 @@ Place setLevel.jar into your `\grasscutter\plugins` folder and restart the serve
 
 -Sets the level of all owned characters
 
-**You must relog after using `/level all` for it to apply**
-
 ## Version
 
 This uses the Grasscutters plugin template for 1.3.1.
 
 ## Issues
 
-Promote level (max level within ascension) does not apply until relog.
-I had it working and then it broke at some point and no amount of hours reverted fixed it, so now relog is required instead.
+None yet.
