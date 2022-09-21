@@ -4,6 +4,7 @@ import java.util.List;
 
 import emu.grasscutter.command.Command;
 import emu.grasscutter.command.CommandHandler;
+import emu.grasscutter.command.Command.TargetRequirement;
 import emu.grasscutter.database.DatabaseHelper;
 import emu.grasscutter.game.avatar.Avatar;
 import emu.grasscutter.game.player.Player;
@@ -13,7 +14,7 @@ import emu.grasscutter.utils.Position;
 
 
 // Command usage
-@Command(label = "level", aliases = "lv" , usage = "[level]")
+@Command(label = "level", aliases = "lv" , usage = "[level]", targetRequirement = TargetRequirement.NONE)
 public class setLevelCommand implements CommandHandler {
     @Override
     public void execute(Player sender, Player targetPlayer, List<String> args) {
