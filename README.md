@@ -4,9 +4,11 @@ This is a simple plugin to easily set character level in game.
 
 There will probably be issues if you don't use the commands as intended so follow the usage.
 
+### No relog needed for levels to set!
+
 ## Installation
 
-Get latest release from releases
+Get latest release from [releases](https://github.com/NotThorny/setLevel/releases)
 
 Place setLevel.jar into your `\grasscutter\plugins` folder and restart the server if it was already running
 
