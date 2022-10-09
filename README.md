@@ -28,7 +28,7 @@ Place setLevel.jar into your `\grasscutter\plugins` folder and restart the serve
 
 ## Version
 
-This uses the Grasscutters plugin template for 1.3.1.
+Made for grasscutter 1.3.1 and 1.3.2, but should work on most versions.
 
 ## Issues
 
