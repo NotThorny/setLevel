@@ -56,7 +56,7 @@ public class setLevelCommand implements CommandHandler {
 		int scene = targetPlayer.getSceneId();
 
 		targetPlayer.getTeamManager().getActiveTeam().forEach(entity -> {
-			Avatar avatar = sender.getAvatars().getAvatarById(entity.getAvatar().getAvatarId());
+			Avatar avatar = entity.getAvatar();
 			int level = Integer.parseInt(args.get(1));
 			level = checkLevel(level);
 			setAvatar(sender, avatar, level);
