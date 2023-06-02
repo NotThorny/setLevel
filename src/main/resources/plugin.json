@@ -3,6 +3,7 @@
   "description": "Set current character level",
   "version": "0.1.0-dev",
   "authors": [ "NotThorny" ],
+  "api": 2,
   
   "mainClass": "thorny.grasscutters.setLevel.setLevel",
   
