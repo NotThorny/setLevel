@@ -10,7 +10,7 @@ import emu.grasscutter.game.avatar.Avatar;
 import emu.grasscutter.game.player.Player;
 import emu.grasscutter.server.packet.send.PacketAvatarAddNotify;
 import emu.grasscutter.server.packet.send.PacketSceneEntityAppearNotify;
-import emu.grasscutter.utils.Position;
+import emu.grasscutter.game.world.Position;
 
 // Command usage
 @Command(label = "level", aliases = "lv", usage = "[level]", targetRequirement = TargetRequirement.NONE)
