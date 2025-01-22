@@ -1,6 +1,6 @@
 {
   "name": "setLevel",
-  "description": "Set current character level",
+  "description": "Set levels of characters in-game",
   "version": "0.1.0-dev",
   "authors": [ "NotThorny" ],
   "api": 2,

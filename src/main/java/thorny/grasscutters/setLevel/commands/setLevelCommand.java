@@ -5,12 +5,10 @@ import java.util.List;
 import emu.grasscutter.command.Command;
 import emu.grasscutter.command.CommandHandler;
 import emu.grasscutter.command.Command.TargetRequirement;
-import emu.grasscutter.database.DatabaseHelper;
 import emu.grasscutter.game.avatar.Avatar;
 import emu.grasscutter.game.player.Player;
 import emu.grasscutter.server.packet.send.PacketAvatarAddNotify;
 import emu.grasscutter.server.packet.send.PacketSceneEntityAppearNotify;
-import emu.grasscutter.game.world.Position;
 
 // Command usage
 @Command(label = "level", aliases = "lv", usage = "[level]", targetRequirement = TargetRequirement.NONE)
@@ -35,37 +33,40 @@ public class setLevelCommand implements CommandHandler {
 		} else this.sendUsageMessage(sender);
 	}// execute
 
+	// Change levels of all characters on the active team
 	public void teamLevel(Player sender, Player targetPlayer, List<String> args) {
 		level = checkLevel(Integer.parseInt(args.get(1)));
 
 		targetPlayer.getTeamManager().getActiveTeam().forEach(entity -> {
-			Avatar avatar = entity.getAvatar();
-			setAvatar(sender, avatar, level);
+			setAvatar(sender, entity.getAvatar(), level);
 		});
 	}
 
+	// Change level of current character
 	private void activeLevel(Player sender, Player targetPlayer, List<String> args) {
 		Avatar avatar = targetPlayer.getTeamManager().getCurrentAvatarEntity().getAvatar();
 		level = checkLevel(Integer.parseInt(args.get(0)));
 		setAvatar(sender, avatar, level);
 	}
 
+	// Change level of all owned characters
 	public void allLevel(Player sender, Player targetPlayer, List<String> args) {
 		level = checkLevel(Integer.parseInt(args.get(1)));
 
-		List<Avatar> avatars = DatabaseHelper.getAvatars(sender);
-		for (Avatar avatar : avatars) {
-			avatar = sender.getAvatars().getAvatarById(avatar.getAvatarId());
-			setAvatar(sender, avatar, level);
-		}
+		// Iterate through all owned
+		sender.getAvatars().forEach(a -> {
+			setAvatar(sender, a, level);
+		});
 	}
 
+	// Validate level is between 1 and 90
 	private int checkLevel(int level) {
-		if (level < 1) level = 1;
-        if (level > 90) level = 90;
+		level = (level < 1) ? 1 : level;
+		level = (level > 90) ? 90 : level;
 		return level;
 	} // checkLevel
 
+	// Sets level, promotion level, and recalculates stats
 	private void setAvatar(Player sender, Avatar avatar, int level) {
 		avatar.setPromoteLevel(Avatar.getMinPromoteLevel(level));
 		avatar.setLevel(level);
@@ -74,14 +75,16 @@ public class setLevelCommand implements CommandHandler {
 		sender.sendPacket(new PacketAvatarAddNotify(avatar, false));
 	} // setAvatar
 
+	// Reload the current scene
 	public void reloadLevel(Player targetPlayer, List<String> args) {
 		try {
-			Position targetPlayerPos = targetPlayer.getPosition();
-			int scene = targetPlayer.getSceneId();
-			targetPlayer.getWorld().transferPlayerToScene(targetPlayer, 1, targetPlayerPos);
-			targetPlayer.getWorld().transferPlayerToScene(targetPlayer, scene, targetPlayerPos);
+			// Transfer back and forth to refresh world without relog
+			targetPlayer.getWorld().transferPlayerToScene(targetPlayer, 1, targetPlayer.getPosition());
+			targetPlayer.getWorld().transferPlayerToScene(targetPlayer, targetPlayer.getSceneId(),
+					targetPlayer.getPosition());
 			targetPlayer.getScene().broadcastPacket(new PacketSceneEntityAppearNotify(targetPlayer));
 
+			// Send completion message
 			switch (args.get(0)) {
 				case "all" -> CommandHandler.sendMessage(targetPlayer, "Changed all character levels!");
 				case "team" -> CommandHandler.sendMessage(targetPlayer, "Changed team levels!");
